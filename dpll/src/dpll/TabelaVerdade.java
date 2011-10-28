@@ -98,7 +98,7 @@ public class TabelaVerdade {
             }
             System.out.print("|\n");
         }
-        System.out.println(obterFNC());
+        
     }
 
     public String obterFNC() {
