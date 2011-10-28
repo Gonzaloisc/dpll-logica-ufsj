@@ -36,7 +36,6 @@ public class TabelaVerdade {
         linhas = (int) Math.pow(2, literais.length);
         colunas = literais.length;
         tabela = new boolean[linhas][colunas + 1];
-
         String bin = "";
         for (int i = linhas - 1; i >= 0; i--) {
             bin = StringUtils.leftPad(Integer.toBinaryString(i), colunas);
@@ -52,8 +51,12 @@ public class TabelaVerdade {
 
         String f = ManipulaFormula.juntarFormula(partes);
         String aux = "";
+
+        System.out.println(f);
         f = f.replace("Λ", " && ");
         f = f.replace("+", " || ");
+        f = f.replace("(", "");
+        f = f.replace(")", "");
         for (char x : literais) {
             aux = f.replace("¬" + x, x + "!=xy");
             if (aux.equals(f)) {
@@ -87,27 +90,29 @@ public class TabelaVerdade {
 
         for (int i = 0; i < tabela.length; i++) {
             for (int j = 0; j <= literais.length; j++) {
-                if(tabela[i][j]){
-                    System.out.print(" 1 ");
-                }else{
-                    System.out.print(" 0 ");
+                if (tabela[i][j]) {
+                    System.out.print("| V ");
+                } else {
+                    System.out.print("| F ");
                 }
             }
-                System.out.println();
+            System.out.print("|\n");
         }
         System.out.println(obterFNC());
     }
 
     public String obterFNC() {
         String formula = "";
+        int cont = 0;//contador de quantos F a tabela possui.
         for (int i = 0; i < tabela.length; i++) {
             if (!tabela[i][literais.length]) {
+                cont++;
                 formula += "(";
                 for (int j = 0; j < literais.length; j++) {
                     if (tabela[i][j]) {
-                        formula += literais[j];
-                    } else {
                         formula += "¬" + literais[j];
+                    } else {
+                        formula += literais[j];
                     }
                     if (j < literais.length - 1) {
                         formula += "+";
@@ -116,7 +121,12 @@ public class TabelaVerdade {
                 formula += ")Λ";
             }
         }
-        formula = formula.substring(0, formula.length()-1);
+        if(cont==tabela.length){
+            return "┴";
+        }else if (cont == 0){
+            return "┬";
+        }
+        formula = formula.substring(0, formula.length() - 1);
         return formula;
     }
 }
