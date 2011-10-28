@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
  */
 public class FormDPLL extends javax.swing.JFrame {
 
-
     public FormDPLL() {
         initComponents();
     }
@@ -37,24 +36,24 @@ public class FormDPLL extends javax.swing.JFrame {
         }
         txtFormula.setText(formula);
         txtFormula.requestFocus();
-        
+
     }
 
     public boolean verificaEntrada(char entrada) {
         char v = Character.toUpperCase(entrada);
         String formula = txtFormula.getText().toUpperCase().trim();
-        
-        
-        if(formula.length()==0 && entrada==')'){
+
+
+        if (formula.length() == 0 && entrada == ')') {
             return false;
         }
-        if((entrada+"").trim().equals("")){
+        if ((entrada + "").trim().equals("")) {
             return true;
         }
-        if(Dpll.ignore.contains(v + "")){
+        if (Dpll.ignore.contains(v + "")) {
             return true;
         }
-        if(formula.length()==0 && (Dpll.literais.contains(v + "")|| Dpll.operacoes.contains(v + "") )){
+        if (formula.length() == 0 && (Dpll.literais.contains(v + "") || Dpll.operacoes.contains(v + ""))) {
             return true;
         }
         if (!Dpll.literais.contains(v + "") && !Dpll.operacoes.contains(v + "")) {
@@ -92,6 +91,7 @@ public class FormDPLL extends javax.swing.JFrame {
         txtFormula = new javax.swing.JTextField();
         bttNegacao = new javax.swing.JButton();
         bttParentese5 = new javax.swing.JButton();
+        txtFNC = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DPLL");
@@ -210,8 +210,15 @@ public class FormDPLL extends javax.swing.JFrame {
         getContentPane().add(bttParentese5);
         bttParentese5.setBounds(120, 180, 180, 50);
 
+        txtFNC.setEditable(false);
+        txtFNC.setFont(new java.awt.Font("Arial Black", 0, 24)); // NOI18N
+        txtFNC.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtFNC.setText("FNC");
+        getContentPane().add(txtFNC);
+        txtFNC.setBounds(10, 240, 430, 80);
+
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        setBounds((screenSize.width-470)/2, (screenSize.height-282)/2, 470, 282);
+        setBounds((screenSize.width-470)/2, (screenSize.height-371)/2, 470, 371);
     }// </editor-fold>//GEN-END:initComponents
 
     private void bttAndActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttAndActionPerformed
@@ -265,8 +272,8 @@ public class FormDPLL extends javax.swing.JFrame {
     private void txtFormulaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFormulaKeyTyped
         // TODO add your handling code here:
         char v = Character.toUpperCase(evt.getKeyChar());
-        
-        if(!verificaEntrada(v)){
+
+        if (!verificaEntrada(v)) {
             evt.consume();
         }
 
@@ -279,9 +286,18 @@ public class FormDPLL extends javax.swing.JFrame {
     }//GEN-LAST:event_bttNegacaoActionPerformed
 
     private void bttParentese5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bttParentese5ActionPerformed
+        if (!txtFormula.getText().equals("Fórmula")) {
+            TabelaVerdade t = new TabelaVerdade(txtFormula.getText());
+            String x =t.obterFNC();
+            txtFNC.setText(x);
+            DPLLMain dpll = new DPLLMain();
+            if (dpll.DPLLMain(new StringBuffer(x))) {
+                JOptionPane.showMessageDialog(this, "A formula é satisfatível!", "SUCESSO", 0);
+            }else{
+                JOptionPane.showMessageDialog(this, "A formula não é satisfatível!", "ERRO", JOptionPane.ERROR_MESSAGE);
+            }
 
-        new TabelaVerdade(txtFormula.getText());
-
+        }
     }//GEN-LAST:event_bttParentese5ActionPerformed
 
     private void txtFormulaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFormulaKeyReleased
@@ -309,6 +325,7 @@ public class FormDPLL extends javax.swing.JFrame {
     private javax.swing.JButton bttParentese2;
     private javax.swing.JButton bttParentese5;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField txtFNC;
     private javax.swing.JTextField txtFormula;
     // End of variables declaration//GEN-END:variables
 }
